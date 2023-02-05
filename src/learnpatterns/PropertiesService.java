@@ -7,11 +7,14 @@ import java.util.Properties;
 
 public class PropertiesService {
     private static PropertiesService propertiesLazyService;
-    private final String PATH = "path";
+    private final String PATH = "src/Resources/config.properties";
     private Properties properties;
 
     private PropertiesService() {
-        try (FileInputStream fis = new FileInputStream(PATH)) { this.properties.load(fis); }
+        try (FileInputStream fis = new FileInputStream(PATH)) {
+            this.properties = new Properties();
+            this.properties.load(fis);
+        }
         catch (FileNotFoundException e) { System.out.println("File not found"); }
         catch (IOException e) { System.out.println("Can't read properties from a file"); }
     }
