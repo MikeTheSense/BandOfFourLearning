@@ -6,9 +6,10 @@ import learnpatterns.Exceptions.ModelPriceOutOfBoundsException;
 import learnpatterns.Exceptions.NoModelsException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Car implements Vehicle {
+public class Car implements Vehicle, Cloneable {
     private String brandName = "default";
     private Model[] models;
     private final String defaultName =  "default";
@@ -25,7 +26,7 @@ public class Car implements Vehicle {
         this.brandName = brandName;
         this.models = new Model[modelsSize];
         for (int i = 0; i < modelsSize ; i++)
-            models[i] = new Model(defaultName + " " + (i + 1), defaultPrice);
+            models[i] = new Model(defaultName + " " + (i + 1), defaultPrice+i);
     };
 
     public void setBrandName(String brandName){
@@ -75,7 +76,7 @@ public class Car implements Vehicle {
         while(i< models.length && !(models[i].getModelName().equals(modelName)))
             i++;
         if (i < models.length) models[i].setPrice(newPrice);
-        throw new NoSuchModelNameException(modelName);
+        else throw new NoSuchModelNameException(modelName);
     }
 
     public double[] getAllModelsPrice()
@@ -126,7 +127,18 @@ public class Car implements Vehicle {
         return models.length;
     }
 
-    private class Model{
+    @Override
+    public Car clone() throws CloneNotSupportedException{
+        Car clonedCar = (Car)super.clone();
+        clonedCar.models = new Model[getSize()];
+        for (int i = 0; i < getSize(); i++ )
+        {
+            clonedCar.models[i] = models[i].clone();
+        }
+        return clonedCar;
+    }
+
+    private class Model implements Cloneable{
         String modelName;
         double price;
 
@@ -154,6 +166,10 @@ public class Car implements Vehicle {
         {
             setModelName(modelName);
             setPrice(price);
+        }
+        @Override
+        public Model clone() throws CloneNotSupportedException{
+            return (Model)super.clone();
         }
     }
 }

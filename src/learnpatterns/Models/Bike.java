@@ -8,7 +8,7 @@ import learnpatterns.Exceptions.NoSuchModelNameException;
 import java.util.Date;
 
 
-public class Bike implements Vehicle {
+public class Bike implements Vehicle, Cloneable {
     private String brandName;
     private int size = 0;
     private long lastModified;
@@ -50,7 +50,7 @@ public class Bike implements Vehicle {
         Model temporary = head;
         for (int i = 0; i < size ; i++)
         {
-            temporary.next = new Model(defaultName + " " + i, defaultPrice + 1, head, temporary);
+            temporary.next = new Model(defaultName + " " + (i + 1), defaultPrice + i, head, temporary);
             head.prev = temporary.next;
             temporary = temporary.next;
         }
@@ -167,11 +167,31 @@ public class Bike implements Vehicle {
             setLastModified(current.getTime());
         }
         else throw new NoSuchModelNameException(modelName);
+    }
 
+    @Override
+    public Bike clone() throws CloneNotSupportedException{
+        Bike bike = (Bike) super.clone();
+        bike.head = new Model();
+        bike.head.next = bike.head;
+        bike.head.prev = bike.head;
+        Model tmpCur = this.head.next;
+        while (tmpCur != this.head)
+        {
+            Model copy = (Model) tmpCur.clone();
+            bike.head.prev.next = copy;
+            copy.next = bike.head;
+            copy.prev = bike.head.prev;
+            bike.head.prev = copy;
+            tmpCur = tmpCur.next;
+        }
+        Date current = new Date();
+        bike.setLastModified(current.getTime());
+        return bike;
     }
 
 
-    private class Model{
+    private class Model implements Cloneable{
         private String name;
         private double price = Double.NaN;
         Model prev = null;
@@ -212,6 +232,10 @@ public class Bike implements Vehicle {
             this(name,price);
             this.next = next;
             this.prev = prev;
+        }
+        public Model clone() throws CloneNotSupportedException
+        {
+            return (Model)super.clone();
         }
 
     }
