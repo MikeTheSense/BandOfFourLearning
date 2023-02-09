@@ -15,5 +15,4 @@ public interface Vehicle {
     void deleteSelectedModel(String modelName, double modelPrice) throws NoSuchModelNameException;
     int getSize();
     Vehicle clone() throws CloneNotSupportedException;
-
 }
