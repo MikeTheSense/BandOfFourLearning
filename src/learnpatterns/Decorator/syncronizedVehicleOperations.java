@@ -4,6 +4,7 @@ import learnpatterns.Exceptions.DuplicateModelNameException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
 import learnpatterns.Vehicle;
 import learnpatterns.VehicleOperations;
+import learnpatterns.Visitor.Visitor;
 
 public class syncronizedVehicleOperations implements Vehicle {
     private Vehicle vehicle;
@@ -65,5 +66,9 @@ public class syncronizedVehicleOperations implements Vehicle {
     @Override
     public synchronized Vehicle clone() throws CloneNotSupportedException {
         return vehicle.clone();
+    }
+    @Override
+    public synchronized void accept(Visitor visitor){
+        vehicle.accept(visitor);
     }
 }

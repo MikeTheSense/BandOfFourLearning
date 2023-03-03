@@ -2,6 +2,7 @@ package learnpatterns;
 
 import learnpatterns.Exceptions.DuplicateModelNameException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
+import learnpatterns.Visitor.Visitor;
 
 public interface Vehicle {
     String getBrand();
@@ -15,4 +16,5 @@ public interface Vehicle {
     void deleteSelectedModel(String modelName, double modelPrice) throws NoSuchModelNameException;
     int getSize();
     Vehicle clone() throws CloneNotSupportedException;
+    void accept(Visitor visitor);
 }

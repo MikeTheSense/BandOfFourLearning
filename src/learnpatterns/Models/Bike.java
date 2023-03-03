@@ -4,6 +4,7 @@ import learnpatterns.Exceptions.DuplicateModelNameException;
 import learnpatterns.Exceptions.ModelPriceOutOfBoundsException;
 import learnpatterns.Exceptions.NoModelsException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
+import learnpatterns.Visitor.Visitor;
 
 import java.util.Date;
 
@@ -168,6 +169,7 @@ public class Bike implements Vehicle, Cloneable {
         }
         else throw new NoSuchModelNameException(modelName);
     }
+    public void accept(Visitor visitor){visitor.visit(this);}
 
     @Override
     public Bike clone() throws CloneNotSupportedException{

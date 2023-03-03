@@ -1,19 +1,32 @@
 package learnpatterns.Models;
 
-import learnpatterns.*;
+
+import learnpatterns.Command.CarCommand;
 import learnpatterns.Exceptions.DuplicateModelNameException;
 import learnpatterns.Exceptions.ModelPriceOutOfBoundsException;
 import learnpatterns.Exceptions.NoModelsException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
+import learnpatterns.Vehicle;
+import learnpatterns.Visitor.Visitor;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class Car implements Vehicle, Cloneable {
+public class Car implements Vehicle, Cloneable,Serializable {
     private String brandName = "default";
     private Model[] models;
     private final String defaultName =  "default";
     private final double defaultPrice = 1;
+    private CarCommand command;
+
+    public void setCommand(CarCommand command) {
+        this.command = command;
+    }
+    public CarCommand getCommand() {
+        return this.command;
+    }
+
 
     public Car(String brandName)
     {
@@ -44,6 +57,10 @@ public class Car implements Vehicle, Cloneable {
             modelsName[i] = models[i].getModelName();
         }
         return modelsName;
+    }
+
+    public void print(OutputStream ous){
+        this.command.print(new PrintWriter(ous),this);
     }
 
     public void changeModelName(String srcModelName, String dstModelName) throws NoSuchModelNameException, DuplicateModelNameException
@@ -137,8 +154,26 @@ public class Car implements Vehicle, Cloneable {
         }
         return clonedCar;
     }
+    public Iterator<Model> iterator() {
+        return new CarIterator();
+    }
 
-    private class Model implements Cloneable{
+    public Memento createMemento() throws IOException
+    {
+        Memento mem = new Memento();
+        mem.createCar(this);
+        return mem;
+    }
+    public Car setMemento(Memento memento) throws IOException, ClassNotFoundException
+    {
+        return memento.getCar();
+    }
+
+    public void accept(Visitor visitor){visitor.visit(this);}
+
+
+
+    protected static class Model implements Cloneable,Serializable{
         String modelName;
         double price;
 
@@ -171,5 +206,52 @@ public class Car implements Vehicle, Cloneable {
         public Model clone() throws CloneNotSupportedException{
             return (Model)super.clone();
         }
+        @Override
+        public String toString()
+        {
+            return this.modelName + " " + this.price;
+        }
+    }
+
+
+
+    private class CarIterator implements Iterator<Model>{
+        private int index;
+
+        @Override
+        public boolean hasNext() {
+            return index < getSize();
+        }
+
+        @Override
+        public Model next() {
+            return models[index++];
+        }
+    }
+
+    public static class Memento {
+        private byte[] memento;
+        public void createCar(Car car) throws IOException {
+            ByteArrayOutputStream bys = new ByteArrayOutputStream();
+            ObjectOutputStream ous = new ObjectOutputStream(bys);
+            ous.writeObject(car);
+            ous.flush();
+            this.memento = bys.toByteArray();
+        }
+
+        public Car getCar() throws IOException,ClassNotFoundException{
+            ByteArrayInputStream bis = new ByteArrayInputStream(memento);
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            return (Car)ois.readObject();
+        }
+
+
+
+
+
+
+
+
+
     }
 }

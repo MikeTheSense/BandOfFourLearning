@@ -1,7 +1,7 @@
 package learnpatterns;
 
-import learnpatterns.Models.Car;
 
+import learnpatterns.Models.Car;
 
 public class CarFactory implements TransportFactory {
     @Override

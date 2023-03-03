@@ -9,7 +9,6 @@ public class PropertiesService {
     private static PropertiesService propertiesLazyService;
     private final String PATH = "src/Resources/config.properties";
     private Properties properties;
-
     private PropertiesService() {
         try (FileInputStream fis = new FileInputStream(PATH)) {
             this.properties = new Properties();

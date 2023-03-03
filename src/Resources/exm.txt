@@ -1,0 +1,1 @@
+Car brand: modeModel brand: default 1 price is: 1.0Model brand: default 2 price is: 2.0Model brand: default 3 price is: 3.0
