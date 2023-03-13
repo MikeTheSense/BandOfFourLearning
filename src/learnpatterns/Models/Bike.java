@@ -6,10 +6,11 @@ import learnpatterns.Exceptions.NoModelsException;
 import learnpatterns.Exceptions.NoSuchModelNameException;
 import learnpatterns.Visitor.Visitor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
-public class Bike implements Vehicle, Cloneable {
+public class Bike implements Vehicle, Cloneable, Serializable {
     private String brandName;
     private int size = 0;
     private long lastModified;
@@ -39,6 +40,8 @@ public class Bike implements Vehicle, Cloneable {
         Date current = new Date();
         setLastModified(current.getTime());
     }
+    public Bike()
+    {}
 
     public void setLastModified(long lastModified) {
         this.lastModified = lastModified;
@@ -193,7 +196,7 @@ public class Bike implements Vehicle, Cloneable {
     }
 
 
-    private class Model implements Cloneable{
+    private class Model implements Cloneable,Serializable{
         private String name;
         private double price = Double.NaN;
         Model prev = null;
